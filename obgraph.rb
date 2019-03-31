@@ -7,11 +7,11 @@ require 'active_support'
 require 'active_support/core_ext'
 
 u = 'yebyenw'
-g = '20-minutes'
+g = 'ob-mirror'
 
 url = "https://www.beeminder.com/api/v1/users/#{u}/goals/#{g}/datapoints.json"
 
-data = IO.read('./20-minutes.json')
+data = IO.read('./ob-mirror.json')
 result = JSON.parse(data)
 
 # {"errors":{"auth_token":"bad_token","message":"No such auth_token found. (Did you mix up auth_token and access_token?)"}}
