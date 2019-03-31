@@ -5,7 +5,7 @@ server = TCPServer.new 5000
 while session = server.accept
   begin
   request = session.gets
-  puts request
+  # puts request
 
   session.print "HTTP/1.1 200\r\n" # 1
   session.print "Content-Type: text/html\r\n" # 2
