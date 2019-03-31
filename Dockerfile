@@ -7,18 +7,29 @@ ENV APPDIR="/home/${RVM_USER}/ob-mirror"
 RUN apt-get update && apt-get install -y --no-install-recommends \
   vim-tiny && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# set the time zone
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  tzdata && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN echo "America/New_York" > /etc/timezone
+RUN unlink /etc/localtime
+RUN dpkg-reconfigure -f noninteractive tzdata
+
+# include the sqlite schema where user can write to it
 RUN mkdir ${APPDIR}
 COPY sqlite.schema /tmp/
 RUN chown ${RVM_USER} ${APPDIR} /tmp/sqlite.schema
 USER ${RVM_USER}
 ENV RUBY=2.6.2
 
+# include the ruby-version and Gemfile for bundle install
 ADD Gemfile Gemfile.lock .ruby-version ${APPDIR}/
 WORKDIR ${APPDIR}
 RUN  bash --login -c 'bundle install'
 
+# include the app source code
 ADD .   ${APPDIR}
-
+# the app is executed through the README file
 CMD  bash -c 'source /etc/profile.d/rvm.sh && ./README'
 
 # migrate the database
