@@ -22,9 +22,9 @@ if result.present? && result.class == Hash
   if e_h.present? && e_h.include?('message')
     Kernel.abort(e['message'])
   end
+# if the parse is successful, the result is an array:
+elsif result.present? && result.class == Array
+  beedata([result[0],result[1],result[2]])
 else
-  Kernel.abort('data read by JSON could not be parsed into a hash')
+  Kernel.abort('data read by JSON could not be parsed into a hash or array')
 end
-
-beedata([result[0],result[1],result[2]])
-
