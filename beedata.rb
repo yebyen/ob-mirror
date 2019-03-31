@@ -48,7 +48,6 @@ def beedata(arr)
 
   if ms.blank?
     add_first_minute(arr, ms)
-    return
   end
 
   newest_date = nil
