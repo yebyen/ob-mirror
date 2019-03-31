@@ -7,11 +7,11 @@ RVM_ENVIR=/etc/profile.d/rvm.sh
 RUBY_VERS=2.6.2
 
    API="https://www.beeminder.com/api/v1"
-  JSON="goals/20-minutes/datapoints.json"
+  JSON="goals/ob-mirror/datapoints.json"
   TOKEN="auth_token=${AUTH_TOKEN}"
 
-curl -s "$API/users/yebyenw/$JSON?$TOKEN" > 20-minutes.json
+curl -s "$API/users/yebyenw/$JSON?$TOKEN" > ob-mirror.json
 
  .  $RVM_ENVIR
 $RU $RUBY_VERS
-$BE ./20graph.rb
+$BE ./obgraph.rb

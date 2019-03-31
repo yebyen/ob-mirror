@@ -89,7 +89,7 @@ def beedata(arr)
       new_value = last_value-1
     end
     puts "sending: #{new_value}"
-    cmd = "beemind -t #{AUTH_TOKEN} 20-minutes '#{new_value}' 'from beeminute auto'"
+    cmd = "beemind -t #{AUTH_TOKEN} ob-mirror '#{new_value}' 'from beeminute auto'"
     puts cmd.gsub(AUTH_TOKEN, "[AUTH TOKEN]")
     `#{cmd}`
   end
