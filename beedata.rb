@@ -28,12 +28,16 @@ DB = Sequel.connect('sqlite://beegraph.sqlite')
          "requestid" => nil
 =end
 
-def add_first_minute(arr)
-        d = arr.first
-        ms.insert(:timestamp => d['timestamp'], :value => d['value'],
-                  :comment => d['comment'], :id => d['id'],
-                  :updated_at => d['updated_at'],
-                  :requestid => d['requestid'])
+def add_first_minute(arr, ms)
+  arr.sort{|a| a['timestamp']}
+    .each do |d|
+    if d.present?
+      ms.insert(:timestamp => d['timestamp'], :value => d['value'],
+                :comment => d['comment'], :id => d['id'],
+                :updated_at => d['updated_at'],
+                :requestid => d['requestid'])
+    end
+  end
 end
 
 # beedata(arr): arr has newest beeminder data in no particular order
@@ -43,7 +47,7 @@ def beedata(arr)
   ms = DB[:minutes]
 
   if ms.blank?
-    add_first_minute(arr)
+    add_first_minute(arr, ms)
     return
   end
 
@@ -52,7 +56,8 @@ def beedata(arr)
 
   arr.each do |d|
     next if d.blank?
-    m = ms.where(:id => d['id']).first
+    ms_q = ms.where(:id => d['id'])
+    m = ms_q.first
     #puts "timestamp.to_date: #{Time.at(d['timestamp']).to_date}"
 
     record_date = Time.at(d['updated_at']).to_date
@@ -77,13 +82,14 @@ def beedata(arr)
     # it, read the date updated_at, and store it if newer than any other.
     unless m.nil?
       mt = m[:updated_at]     # data from local cache
-      dt = d['updated_at']    # data from beeminder
+      dt = d['timestamp']     # trust data from beeminder
 
       record_date = Time.at(m[:updated_at]).to_date
+      published_date = Time.at(dt).to_date
 
       # The database has a newer date than previously seen
-      if newest_date.nil? or record_date>newest_date
-        newest_date = record_date
+      if newest_date.nil? or published_date>newest_date
+        newest_date = published_date
         last_value = m[:value]
       end
 
