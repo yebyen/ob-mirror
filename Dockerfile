@@ -15,23 +15,22 @@ RUN echo "America/New_York" > /etc/timezone
 RUN unlink /etc/localtime
 RUN dpkg-reconfigure -f noninteractive tzdata
 
-# include the sqlite schema where user can write to it
+# migrate the database
 RUN mkdir ${APPDIR}
+WORKDIR ${APPDIR}
 COPY sqlite.schema /tmp/
-RUN chown ${RVM_USER} ${APPDIR} /tmp/sqlite.schema
+RUN touch /tmp/sqlite.schema && ex -c '1d2|$d|x' /tmp/sqlite.schema
+RUN sqlite3 beegraph.sqlite < /tmp/sqlite.schema
+
+RUN chown ${RVM_USER} ${APPDIR}/beegraph.sqlite ${APPDIR}
 USER ${RVM_USER}
 ENV RUBY=2.6.2
 
 # include the ruby-version and Gemfile for bundle install
 ADD Gemfile Gemfile.lock .ruby-version ${APPDIR}/
-WORKDIR ${APPDIR}
 RUN  bash --login -c 'bundle install'
 
 # include the app source code
 ADD .   ${APPDIR}
 # the app is executed through the README file
 CMD  bash -c 'source /etc/profile.d/rvm.sh && ./README'
-
-# migrate the database
-RUN touch /tmp/sqlite.schema && ex -c '1d2|$d|x' /tmp/sqlite.schema
-RUN sqlite3 beegraph.sqlite < /tmp/sqlite.schema
