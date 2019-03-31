@@ -29,7 +29,8 @@ DB = Sequel.connect('sqlite://beegraph.sqlite')
 =end
 
 def add_first_minute(arr, ms)
-  arr.sort{|a| a['timestamp']}
+  arr.reject{|d| d.nil?}
+    .sort{|a| a['timestamp']}
     .each do |d|
     if d.present?
       ms.insert(:timestamp => d['timestamp'], :value => d['value'],
