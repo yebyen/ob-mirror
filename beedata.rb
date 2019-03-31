@@ -28,16 +28,30 @@ DB = Sequel.connect('sqlite://beegraph.sqlite')
          "requestid" => nil
 =end
 
+def add_first_minute(arr)
+        d = arr.first
+        ms.insert(:timestamp => d['timestamp'], :value => d['value'],
+                  :comment => d['comment'], :id => d['id'],
+                  :updated_at => d['updated_at'],
+                  :requestid => d['requestid'])
+end
+
 # beedata(arr): arr has newest beeminder data in no particular order
 # (records are usually newest first, data structured as the two above)
 def beedata(arr)
   #ap arr
   ms = DB[:minutes]
 
+  if ms.blank?
+    add_first_minute(arr)
+    return
+  end
+
   newest_date = nil
   last_value = nil
 
   arr.each do |d|
+    next if d.blank?
     m = ms.where(:id => d['id']).first
     #puts "timestamp.to_date: #{Time.at(d['timestamp']).to_date}"
 
