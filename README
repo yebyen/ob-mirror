@@ -8,7 +8,7 @@ RUBY_VERS=2.6.2
 
    API="https://www.beeminder.com/api/v1"
   JSON="goals/20-minutes/datapoints.json"
-  TOKEN="auth_token=$(cat README_secret)"
+  TOKEN="auth_token=$(tail -1 README_secret)"
 
 curl -s "$API/users/yebyenw/$JSON?$TOKEN" > 20-minutes.json
 
