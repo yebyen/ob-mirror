@@ -1,2 +1,2 @@
 web: bash --login -c 'ruby web.rb'
-cron: ./README; sleep 900
+cron: ./README; sleep $((15 * 60 * 4 * 4))  # every 4 hours
