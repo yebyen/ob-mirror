@@ -6,6 +6,8 @@ RU='rvm'
 RVM_ENVIR=/etc/profile.d/rvm.sh
 RUBY_VERS=2.6.2
 
+# If this is a "do more" goal, then you must convert it to Custom and be sure
+# to manually disable the Beeminder API setting "goal_kyoom"
    API="https://www.beeminder.com/api/v1"
   JSON="goals/ob-mirror/datapoints.json"
   TOKEN="auth_token=${AUTH_TOKEN}"
