@@ -1,4 +1,4 @@
-
+LABEL maintainer="Kingdon Barrett <kingdon.b@nd.edu>"
 ARG RVM_RUBY_VERSIONS="2.6.2"
 FROM kingdonb/docker-rvm
 ENV APPDIR="/home/${RVM_USER}/ob-mirror"
@@ -24,6 +24,7 @@ COPY ${SCHEMA} /tmp/
 RUN touch /tmp/${SCHEMA} && ex -c '1d2|$d|x' /tmp/${SCHEMA}
 RUN sqlite3 ${STATE} < /tmp/${SCHEMA}
 
+# RVM_USER is permitted to create files and may write to $STATE
 RUN chown ${RVM_USER} ${APPDIR}/${STATE} ${APPDIR}
 USER ${RVM_USER}
 ENV RUBY=2.6.2
@@ -34,6 +35,6 @@ RUN  bash --login -c 'bundle install'
 
 # include the app source code
 ADD .   ${APPDIR}
-# the app is executed through the README file
+# web.rb for default health checking on Proctype "cmd"
 CMD  bundle exec ruby ./web.rb
 EXPOSE 5000
