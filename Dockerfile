@@ -1,6 +1,6 @@
-LABEL maintainer="Kingdon Barrett <kingdon.b@nd.edu>"
 ARG RVM_RUBY_VERSIONS="2.6.2"
 FROM kingdonb/docker-rvm
+LABEL maintainer="Kingdon Barrett <kingdon.b@nd.edu>"
 ENV APPDIR="/home/${RVM_USER}/ob-mirror"
 ENV SCHEMA="sqlite.schema"
 ENV STATE="beegraph.sqlite"
