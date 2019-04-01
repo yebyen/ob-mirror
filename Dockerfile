@@ -2,6 +2,8 @@
 ARG RVM_RUBY_VERSIONS="2.6.2"
 FROM kingdonb/docker-rvm
 ENV APPDIR="/home/${RVM_USER}/ob-mirror"
+ENV SCHEMA="sqlite.schema"
+ENV STATE="beegraph.sqlite"
 
 # install 'ex' to do some manhandling of the schema file for loading
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -18,11 +20,11 @@ RUN dpkg-reconfigure -f noninteractive tzdata
 # migrate the database
 RUN mkdir ${APPDIR}
 WORKDIR ${APPDIR}
-COPY sqlite.schema /tmp/
-RUN touch /tmp/sqlite.schema && ex -c '1d2|$d|x' /tmp/sqlite.schema
-RUN sqlite3 beegraph.sqlite < /tmp/sqlite.schema
+COPY ${SCHEMA} /tmp/
+RUN touch /tmp/${SCHEMA} && ex -c '1d2|$d|x' /tmp/${SCHEMA}
+RUN sqlite3 ${STATE} < /tmp/${SCHEMA}
 
-RUN chown ${RVM_USER} ${APPDIR}/beegraph.sqlite ${APPDIR}
+RUN chown ${RVM_USER} ${APPDIR}/${STATE} ${APPDIR}
 USER ${RVM_USER}
 ENV RUBY=2.6.2
 
