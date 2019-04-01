@@ -35,4 +35,5 @@ RUN  bash --login -c 'bundle install'
 # include the app source code
 ADD .   ${APPDIR}
 # the app is executed through the README file
-CMD  bash -c 'source /etc/profile.d/rvm.sh && ./README'
+CMD  bundle exec ruby ./web.rb
+EXPOSE 5000
