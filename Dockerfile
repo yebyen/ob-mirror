@@ -1,4 +1,4 @@
-ARG RVM_RUBY_VERSIONS="2.6.2"
+ARG RVM_RUBY_VERSIONS="2.6.2 2.6.3"
 FROM kingdonb/docker-rvm
 LABEL maintainer="Kingdon Barrett <kingdon.b@nd.edu>"
 ENV APPDIR="/home/${RVM_USER}/ob-mirror"
